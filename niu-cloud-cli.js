@@ -27,5 +27,6 @@ const yargs = require("yargs");
 yargs.command(require("./src/createToken"))
     .command(require("./src/getVehicles"))
     .command(require("./src/getVehiclePos"))
+    .command(require("./src/getBatteryInfo"))
     .help()
     .argv

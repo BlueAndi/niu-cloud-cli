@@ -21,11 +21,10 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
-const kml = require("./kml");
 
-exports.command = "get-vehicle-pos";
+exports.command = "get-battery-info";
 
-exports.describe = "Get vehicle position.";
+exports.describe = "Get battery information.";
 
 exports.builder = {
     token: {
@@ -42,24 +41,11 @@ exports.builder = {
         describe: "Output result in JSON format.",
         type: "boolean",
         default: false
-    },
-    kml: {
-        describe: "Output result as KML file.",
-        type: "boolean",
-        default: false
     }
 };
 
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
-
-    /* Only --json or --kml is possible. */
-    if ((true === argv.json) &&
-        (true === argv.kml))
-    {
-        console.log("Only --json or --kml is possible.");
-        return;
-    }
 
     client.setSessionToken({
 
@@ -67,38 +53,46 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        return client.getVehiclePos({
+        return client.getBatteryInfo({
             sn: argv.sn
         });
 
     }).then(function(result) {
 
-        var vehiclePos  = result.result.data;
-        var timeDate    = new Date(vehiclePos.timestamp);
+        var batteryInfo = result.result.data;
+        var index       = 0;
+        var compartment = null;
+        var batteryCnt  = 1;
 
         if (true === argv.json) {
 
-            console.log(JSON.stringify(vehiclePos, null, 2));
-
-        } else if (true === argv.kml) {
-
-            console.log(kml.generate({
-                position: {
-                    name: argv.sn,
-                    description: "Last known position from " + timeDate.toLocaleString(),
-                    latitude: vehiclePos.lat,
-                    longitude: vehiclePos.lng
-                }
-            }));
+            console.log(JSON.stringify(batteryInfo, null, 2));
 
         } else {
 
-            console.log("Latitude     : " + vehiclePos.lat);
-            console.log("Longitude    : " + vehiclePos.lng);
-            console.log("Timestamp    : " + timeDate.toLocaleString());
-            console.log("GPS          : " + vehiclePos.gps);
-            console.log("GPS precision: " + vehiclePos.gpsPrecision);
+            if ("object" === typeof batteryInfo.batteries.compartmentB)
+            {
+                ++batteryCnt;
+            }
 
+            for(index = 0; index < batteryCnt; ++index) {
+                if (0 === index) {
+                    console.log("Battery A        :");
+                    compartment = batteryInfo.batteries.compartmentA;
+                } else {
+                    console.log("Battery B        :");
+                    compartment = batteryInfo.batteries.compartmentB;
+                }
+
+                console.log("\tBMS id         : " + compartment.bmsId);
+                console.log("\tIs connected   : " + compartment.isConnected);
+                console.log("\tState of charge: " + compartment.batteryCharging + " %");
+                console.log("\tCharge cycles  : " + compartment.chargedTimes);
+                console.log("\tTemperature    : " + compartment.temperature + " °C");
+                console.log("\tGrade          : " + compartment.gradeBattery);
+            }
+
+            console.log("Estimated mileage: " + batteryInfo.estimatedMileage + " km");
         }
 
     }).catch(function(err) {

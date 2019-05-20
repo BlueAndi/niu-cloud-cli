@@ -58,7 +58,7 @@ exports.handler = function(argv) {
 
         if (true === argv.json) {
 
-            console.log(JSON.stringify(result.result.data, null, 2));
+            console.log(JSON.stringify(vehicles, null, 2));
 
         } else {
 
