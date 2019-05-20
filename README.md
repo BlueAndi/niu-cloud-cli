@@ -7,8 +7,10 @@ A project originated from an [article in the Elektroroller-Forum](https://www.el
 
 ## Installation
 
+The niu-cloud-connector libray is included as git submodule. Therefore the "--recursive" option is important, because otherwise the niu-cloud-connector is not included.
+
 ```
-$ git clone https://github.com/BlueAndi/niu-cloud-cli.git
+$ git clone --recursive https://github.com/BlueAndi/niu-cloud-cli.git
 $ cd niu-cloud-cli
 $ npm install
 ```
