@@ -1,0 +1,3 @@
+[submodule "libs/niu-cloud-connector"]
+	path = libs/niu-cloud-connector
+	url = https://github.com/BlueAndi/niu-cloud-connector.git
