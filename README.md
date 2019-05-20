@@ -33,6 +33,16 @@ Get a list of your vehicles. Each vehicle has a serial number, which is necessar
 node niu-cloud-cli.js get-vehicles --token <token>
 ```
 
+## KML output for google earth or google maps
+
+Generate a KML file including the last known position of your NIU e-scooter with the following call:
+
+```
+node niu-cloud-cli.js get-vehicle-pos --token <token> --sn <serial-number> --kml > pos.kml
+```
+
+Load the generated pos.kml file in google earth or google map and voila!
+
 ## Issues, Ideas and bugs
 
 If you have further ideas or you found some bugs, great! Create a [issue](https://github.com/BlueAndi/niu-cloud-connector/issues) or if

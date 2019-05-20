@@ -21,10 +21,11 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
+const kml = require("./kml");
 
-exports.command = "get-vehicles";
+exports.command = "get-vehicle-pos";
 
-exports.describe = "Get vehicles.";
+exports.describe = "Get vehicle position.";
 
 exports.builder = {
     token: {
@@ -32,8 +33,18 @@ exports.builder = {
         type: "string",
         demand: true
     },
+    sn: {
+        describe: "Serial number",
+        type: "string",
+        demand: true
+    },
     json: {
         describe: "Output result in JSON format.",
+        type: "boolean",
+        default: false
+    },
+    kml: {
+        describe: "Output result as KML file.",
         type: "boolean",
         default: false
     }
@@ -42,44 +53,52 @@ exports.builder = {
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
 
+    /* Only --json or --kml is possible. */
+    if ((true === argv.json) &&
+        (true === argv.kml))
+    {
+        console.log("Only --json or --kml is possible.");
+        return;
+    }
+
     client.setSessionToken({
 
         token: argv.token
 
     }).then(function(result) {
 
-        return client.getVehicles();
+        return client.getVehiclePos({
+            sn: argv.sn
+        });
 
     }).then(function(result) {
 
-        var vehicleIndex    = 0;
-        var vehicles        = result.result.data;
-        var vehicle         = null;
+        var vehiclePos  = result.result.data;
+        var timeDate    = new Date(vehiclePos.timestamp);
 
         if (true === argv.json) {
 
             console.log(JSON.stringify(result.result.data, null, 2));
 
+        } else if (true === argv.kml) {
+
+            console.log(kml.generate({
+                position: {
+                    name: argv.sn,
+                    description: "Last known position from " + timeDate.toLocaleString(),
+                    latitude: vehiclePos.lat,
+                    longitude: vehiclePos.lng
+                }
+            }));
+
         } else {
 
-            if (0 === vehicles.length) {
+            console.log("Latitude     : " + vehiclePos.lat);
+            console.log("Longitude    : " + vehiclePos.lng);
+            console.log("Timestamp    : " + timeDate.toLocaleString());
+            console.log("GPS          : " + vehiclePos.gps);
+            console.log("GPS precision: " + vehiclePos.gpsPrecision);
 
-                console.log("No vehicles available.");
-
-            } else {
-
-                for(vehicleIndex = 0; vehicleIndex < vehicles.length; ++vehicleIndex) {
-    
-                    vehicle = vehicles[vehicleIndex];
-        
-                    console.log((vehicleIndex + 1) + ". " + vehicle.type);
-                    console.log("\tName         : " + vehicle.name);
-                    console.log("\tSerial number: " + vehicle.sn);
-                    console.log("\tFrame number : " + vehicle.frameNo);
-                    console.log("\tEngine number: " + vehicle.engineNo);
-                }
-
-            }
         }
 
     }).catch(function(err) {
