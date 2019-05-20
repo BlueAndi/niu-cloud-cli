@@ -28,5 +28,6 @@ yargs.command(require("./src/createToken"))
     .command(require("./src/getVehicles"))
     .command(require("./src/getVehiclePos"))
     .command(require("./src/getBatteryInfo"))
+    .command(require("./src/getTracks"))
     .help()
     .argv
