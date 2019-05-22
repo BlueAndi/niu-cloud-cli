@@ -37,13 +37,50 @@ node niu-cloud-cli.js get-vehicles --token <token>
 
 ## KML output for google earth or google maps
 
+### Last known position
+
 Generate a KML file including the last known position of your NIU e-scooter with the following call:
 
 ```
 node niu-cloud-cli.js get-vehicle-pos --token <token> --sn <serial-number> --kml > pos.kml
 ```
 
-Load the generated pos.kml file in google earth or google map and voila!
+Load the generated pos.kml file in google earth or google map.
+
+### Track detail
+
+First get e.g. the last recorded track.
+
+```
+node niu-cloud-cli.js get-tracks --token <token> --sn <serial-number> --num 1
+```
+```
+Track #1
+        Track id        : 1558023845684dBO79fv:1
+        Track date      : 20190516
+        Track start time: 2019-5-16 18:24:05
+        Track end time  : 2019-5-16 18:38:04
+        Distance        : 13147 m
+        Average speed   : 57.1 km/h
+        Riding time     : 838 min.
+        Start point     :
+                Latitude : xx.xxxxxx
+                Longitude: xx.xxxxxx
+        End point       :
+                Latitude : xx.xxxxxx
+                Longitude: xx.xxxxxx
+```
+
+There you will find the track id and the track date, which are necessay to retrieve the full detail.
+Now generate a KML file from a complete recorded track of your NIU e-scooter with the following call:
+
+```
+node niu-cloud-cli.js get-track-detail --token <token> --sn <serial-number> --trackId <track-id> --trackDate <track-date> --kml > track.kml
+```
+
+Load the generated track.kml file in google earth or google map and voila!
+
+![track_kml_example](https://github.com/BlueAndi/niu-cloud-cli/blob/master/doc/track_kml.jpg)
 
 ## Issues, Ideas and bugs
 

@@ -110,6 +110,8 @@ function indentStr(str, indent) {
  * @param {string}  options.position.description    - Position description.
  * @param {number}  options.position.latitude       - Latitude in WGS84 format.
  * @param {number}  options.position.longitude      - Longitude in WGS84 format.
+ * 
+ * @returns {string} KML file as string.
  */
 kml.generate = function(options) {
     var data        = "";
@@ -153,6 +155,108 @@ kml.generate = function(options) {
     data += indentStr("</Point>" + lineEnding, lineIndent);
     lineIndent -= indent;
     data += indentStr("</Placemark>" + lineEnding, lineIndent);
+
+    lineIndent -= indent;
+    data += indentStr("</Document>" + lineEnding, lineIndent);
+    lineIndent -= indent;
+    data += indentStr("</kml>" + lineEnding, lineIndent);
+
+    return data;
+};
+
+/**
+ * Generate a KML file string from a track.
+ * 
+ * @param {Object[]}    trackItems              - Track items.
+ * @param {string}      trackItems.name         - Position name.
+ * @param {string}      trackItems.description  - Position description.
+ * @param {number}      trackItems.latitude     - Latitude in WGS84 format.
+ * @param {number}      trackItems.longitude    - Longitude in WGS84 format.
+ * 
+ * @returns {string} KML file as string.
+ */
+kml.generateTrack = function(trackItems) {
+    var data        = "";
+    var lineEnding  = "\r\n";
+    var indent      = 4;
+    var lineIndent  = 0;
+    var index       = 0;
+    var urlStyle    = "";
+    var bearing     = 0;
+
+    if (false === Array.isArray(trackItems)) {
+        return "";
+    }
+
+    /* KML header */
+    data  = indentStr("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + lineEnding, lineIndent);
+    /* KML namespace declaration */
+    data += indentStr("<kml xmlns=\"http://www.opengis.net/kml/2.2\">" + lineEnding, lineIndent);
+    lineIndent += indent;
+    /* KML document */
+    data += indentStr("<Document>" + lineEnding, lineIndent);
+    lineIndent += indent;
+    /* Style */
+    data += indentStr("<Style id=\"normalPlacemark\">" + lineEnding, lineIndent);
+    lineIndent += indent;
+    data += indentStr("<IconStyle>" + lineEnding, lineIndent);
+    lineIndent += indent;
+    data += indentStr("<Icon>" + lineEnding, lineIndent);
+    lineIndent += indent;
+    data += indentStr("<href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>" + lineEnding, lineIndent);
+    lineIndent -= indent;
+    data += indentStr("</Icon>" + lineEnding, lineIndent);
+    lineIndent -= indent;
+    data += indentStr("</IconStyle>" + lineEnding, lineIndent);
+    lineIndent -= indent;
+    data += indentStr("</Style>" + lineEnding, lineIndent);
+    lineIndent -= indent;
+
+    for(index = 0; index < 16; ++index) {
+        data += indentStr("<Style id=\"bearing" + index + "\">" + lineEnding, lineIndent);
+        lineIndent += indent;
+        data += indentStr("<IconStyle>" + lineEnding, lineIndent);
+        lineIndent += indent;
+        data += indentStr("<Icon>" + lineEnding, lineIndent);
+        lineIndent += indent;
+        data += indentStr("<href>http://earth.google.com/images/kml-icons/track-directional/track-" + index + ".png</href>" + lineEnding, lineIndent);
+        data += indentStr("</Icon>" + lineEnding, lineIndent);
+        lineIndent -= indent;
+        data += indentStr("</IconStyle>" + lineEnding, lineIndent);
+        lineIndent -= indent;
+        data += indentStr("</Style>" + lineEnding, lineIndent);
+        lineIndent -= indent;
+    }
+
+    for(index = 0; index < trackItems.length; ++index) {
+
+        /* Last item? */
+        if (trackItems.length == (index + 1)) {
+
+            urlStyle = "#normalPlacemark";
+
+        } else {
+
+            /* Calculate bearing to the next track item */
+            bearing = getBearing(trackItems[index].latitude, trackItems[index].longitude, trackItems[index + 1].latitude, trackItems[index + 1].longitude);
+
+            /* Choose the right arrow icon, which represents the bearing. */
+            urlStyle = "#bearing" + (Math.ceil(bearing / 22.5) % 16);
+        }
+
+        data += indentStr("<Placemark>" + lineEnding, lineIndent);
+        lineIndent += indent;
+        data += indentStr("<name>" + trackItems[index].name + "</name>" + lineEnding, lineIndent);
+        data += indentStr("<description>" + trackItems[index].description + "</description>" + lineEnding, lineIndent);
+        data += indentStr("<Point>" + lineEnding, lineIndent);
+        lineIndent += indent;
+        data += indentStr("<coordinates>" + trackItems[index].longitude + "," + trackItems[index].latitude + "</coordinates>" + lineEnding, lineIndent);
+        lineIndent -= indent;
+        data += indentStr("</Point>" + lineEnding, lineIndent);
+        lineIndent -= indent;
+        data += indentStr("<styleUrl>" + urlStyle + "</styleUrl>" + lineEnding, lineIndent);
+        data += indentStr("</Placemark>" + lineEnding, lineIndent);
+    }
 
     lineIndent -= indent;
     data += indentStr("</Document>" + lineEnding, lineIndent);

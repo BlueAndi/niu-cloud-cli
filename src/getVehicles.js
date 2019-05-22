@@ -48,7 +48,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        return client.getVehicles();
+        return result.client.getVehicles();
 
     }).then(function(result) {
 
@@ -84,7 +84,14 @@ exports.handler = function(argv) {
 
     }).catch(function(err) {
 
-        console.log("Error: ", err.error.message);
+        if ("string" === typeof err.error.message) {
+            
+            console.log("Error: ", err.error.message);
+
+        } else if ("string" === typeof err.error.trace) {
+
+            console.log("Error: ", err.error.trace);
+        }
 
     });
 
