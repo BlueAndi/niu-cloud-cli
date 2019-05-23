@@ -31,4 +31,4 @@ yargs.command(require("./src/createToken"))
     .command(require("./src/getTracks"))
     .command(require("./src/getTrackDetail"))
     .help()
-    .argv
+    .argv;
