@@ -88,6 +88,14 @@ function getBearing(startLat, startLong, endLat, endLong) {
     return (degrees(Math.atan2(dLong, dPhi)) + 360.0) % 360.0;
 }
 
+/**
+ * Indent a string with the given number of spaces.
+ * 
+ * @param {string}  str     - String to indent.
+ * @param {number}  indent  - Number of spaces.
+ * 
+ * @return Indented string.
+ */
 function indentStr(str, indent) {
     var index   = 0;
     var result  = "";
