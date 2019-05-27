@@ -24,11 +24,17 @@
 /** Command line argument handling */
 const yargs = require("yargs");
 
-yargs.command(require("./src/createToken"))
+yargs.usage("Usage: $0 <command> [options]")
+    .command(require("./src/createToken"))
     .command(require("./src/getVehicles"))
     .command(require("./src/getVehiclePos"))
     .command(require("./src/getBatteryInfo"))
     .command(require("./src/getTracks"))
     .command(require("./src/getTrackDetail"))
-    .help()
+    .command(require("./src/getFirmwareVersion"))
+    .demandCommand()
+    .help("h")
+    .alias("h", "help")
+    .showHelpOnFail(false, "Specify --help for available options.")
+    .epilog("Copyright 2019 by Andreas Merkle <web@blue-andi.de>")
     .argv;
