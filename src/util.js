@@ -21,21 +21,57 @@
  * SOFTWARE.
  */
 
-/** Command line argument handling */
-const yargs = require("yargs");
+/**
+ * Utility functionality
+ * @namespace
+ */
+var util = {};
 
-yargs.usage("Usage: $0 <command> [options]")
-    .command(require("./src/createToken"))
-    .command(require("./src/getVehicles"))
-    .command(require("./src/getVehiclePos"))
-    .command(require("./src/getBatteryInfo"))
-    .command(require("./src/getTracks"))
-    .command(require("./src/getTrackDetail"))
-    .command(require("./src/getFirmwareVersion"))
-    .command(require("./src/getMotorInfo"))
-    .demandCommand()
-    .help("h")
-    .alias("h", "help")
-    .showHelpOnFail(false, "Specify --help for available options.")
-    .epilog("Copyright 2019 by Andreas Merkle <web@blue-andi.de>")
-    .argv;
+module.exports = util;
+
+/**
+ * Resolve an object path and return value.
+ * 
+ * @param {string}  path    - Object path.
+ * @param {object}  obj     - Object.
+ * 
+ * @returns {*} Value.
+ */
+util.resolve = function(path, obj) {
+
+    return path.split(".").reduce(function(prev, curr) {
+        return prev ? prev[curr] : null;
+    }, obj);
+};
+
+/**
+ * Filter object and return the values separated by ";".
+ * 
+ * @param {object}              obj     - Object.
+ * @param {string | string[]}   filter  - A single filter or a filter array.
+ * 
+ * @returns {string} Values.
+ */
+util.filter = function(obj, filter) {
+    var result      = "";
+    var index       = 0;
+    var separator   = ";";
+
+    if (true === Array.isArray(filter)) {
+
+        for(index = 0; index < filter.length; ++index) {
+
+            if (0 < index) {
+                result += separator;
+            }
+
+            result += util.resolve(filter[index], obj);
+        }
+
+    } else {
+
+        result = util.resolve(filter, obj);
+    }
+
+    return result;
+};

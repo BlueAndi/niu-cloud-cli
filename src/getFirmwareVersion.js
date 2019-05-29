@@ -23,9 +23,9 @@
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 const util = require("./util");
 
-exports.command = "get-battery-info";
+exports.command = "get-firmware-version";
 
-exports.describe = "Get battery information.";
+exports.describe = "Get vehicle firmware version.";
 
 exports.builder = {
     token: {
@@ -59,57 +59,42 @@ exports.handler = function(argv) {
         console.log("Only --json or --filter is possible.");
         return;
     }
-
+    
     client.setSessionToken({
 
         token: argv.token
 
     }).then(function(result) {
 
-        return result.client.getBatteryInfo({
+        return result.client.getFirmwareVersion({
             sn: argv.sn
         });
 
     }).then(function(result) {
 
-        var batteryInfo = result.result.data;
-        var index       = 0;
-        var compartment = null;
-        var batteryCnt  = 1;
+        var firmwareData    = result.result.data;
+        var firmwareDate    = new Date(firmwareData.date);
 
         if (true === argv.json) {
 
-            console.log(JSON.stringify(batteryInfo, null, 2));
+            console.log(JSON.stringify(firmwareData, null, 2));
 
         } else if ("undefined" !== typeof argv.filter) {
 
-            console.log(util.filter(batteryInfo, argv.filter));
+            console.log(util.filter(firmwareData, argv.filter));
 
         } else {
 
-            if ("object" === typeof batteryInfo.batteries.compartmentB)
-            {
-                ++batteryCnt;
-            }
+            console.log("Now version        : " + firmwareData.nowVersion);
+            console.log("Version            : " + firmwareData.version);
+            console.log("Hard version       : " + firmwareData.hardVersion);
+            console.log("SS protocol version: " + firmwareData.ss_protocol_ver);
+            console.log("Byte size          : " + firmwareData.byteSize);
+            console.log("Date               : " + firmwareDate.toLocaleString());
+            console.log("Is support update? : " + firmwareData.isSupportUpdate);
+            console.log("Is update needed?  : " + firmwareData.needUpdate);
+            console.log("OTA description    : " + firmwareData.otaDescribe);
 
-            for(index = 0; index < batteryCnt; ++index) {
-                if (0 === index) {
-                    console.log("Battery A        :");
-                    compartment = batteryInfo.batteries.compartmentA;
-                } else {
-                    console.log("Battery B        :");
-                    compartment = batteryInfo.batteries.compartmentB;
-                }
-
-                console.log("\tBMS id         : " + compartment.bmsId);
-                console.log("\tIs connected   : " + compartment.isConnected);
-                console.log("\tState of charge: " + compartment.batteryCharging + " %");
-                console.log("\tCharge cycles  : " + compartment.chargedTimes);
-                console.log("\tTemperature    : " + compartment.temperature + " °C");
-                console.log("\tGrade          : " + compartment.gradeBattery);
-            }
-
-            console.log("Estimated mileage: " + batteryInfo.estimatedMileage + " km");
         }
 
     }).catch(function(err) {

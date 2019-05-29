@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
+const util = require("./util");
 
 exports.command = "get-vehicles";
 
@@ -36,12 +37,24 @@ exports.builder = {
         describe: "Output result in JSON format.",
         type: "boolean",
         default: false
+    },
+    filter: {
+        describe: "Output filter",
+        type: "string"
     }
 };
 
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
 
+    /* Only --json or --filter is possible. */
+    if ((true === argv.json) &&
+        ("undefined" !== typeof argv.filter))
+    {
+        console.log("Only --json or --filter is possible.");
+        return;
+    }
+    
     client.setSessionToken({
 
         token: argv.token
@@ -59,6 +72,10 @@ exports.handler = function(argv) {
         if (true === argv.json) {
 
             console.log(JSON.stringify(vehicles, null, 2));
+
+        } else if ("undefined" !== typeof argv.filter) {
+
+            console.log(util.filter(vehicles, argv.filter));
 
         } else {
 
