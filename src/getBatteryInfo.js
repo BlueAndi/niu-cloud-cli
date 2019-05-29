@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
+const util = require("./util");
 
 exports.command = "get-battery-info";
 
@@ -41,11 +42,23 @@ exports.builder = {
         describe: "Output result in JSON format.",
         type: "boolean",
         default: false
+    },
+    filter: {
+        describe: "Output filter",
+        type: "string"
     }
 };
 
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
+
+    /* Only --json or --filter is possible. */
+    if ((true === argv.json) &&
+        ("undefined" !== typeof argv.filter))
+    {
+        console.log("Only --json or --filter is possible.");
+        return;
+    }
 
     client.setSessionToken({
 
@@ -67,6 +80,10 @@ exports.handler = function(argv) {
         if (true === argv.json) {
 
             console.log(JSON.stringify(batteryInfo, null, 2));
+
+        } else if ("undefined" !== typeof argv.filter) {
+
+            console.log(util.filter(batteryInfo, argv.filter));
 
         } else {
 
