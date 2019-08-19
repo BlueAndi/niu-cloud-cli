@@ -114,7 +114,11 @@ exports.handler = function(argv) {
 
     }).catch(function(err) {
 
-        if ("string" === typeof err.error.message) {
+        if ("undefined" === typeof err.error) {
+
+            console.log("Error: ", err);
+
+        } else if ("string" === typeof err.error.message) {
             
             console.log("Error: ", err.error.message);
 

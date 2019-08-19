@@ -21,11 +21,11 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
-const kml = require("./kml");
+const util = require("./util");
 
-exports.command = "get-vehicle-pos";
+exports.command = "get-battery-health";
 
-exports.describe = "Get vehicle position.";
+exports.describe = "Get battery health.";
 
 exports.builder = {
     token: {
@@ -43,21 +43,20 @@ exports.builder = {
         type: "boolean",
         default: false
     },
-    kml: {
-        describe: "Output result as KML file.",
-        type: "boolean",
-        default: false
+    filter: {
+        describe: "Output filter",
+        type: "string"
     }
 };
 
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
 
-    /* Only --json or --kml is possible. */
+    /* Only --json or --filter is possible. */
     if ((true === argv.json) &&
-        (true === argv.kml))
+        ("undefined" !== typeof argv.filter))
     {
-        console.log("Only --json or --kml is possible.");
+        console.log("Only --json or --filter is possible.");
         return;
     }
 
@@ -67,38 +66,60 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        return result.client.getVehiclePos({
+        return result.client.getBatteryHealth({
             sn: argv.sn
         });
 
     }).then(function(result) {
 
-        var vehiclePos  = result.result.data;
-        var timeDate    = new Date(vehiclePos.timestamp);
+        var batteryHealth   = result.result.data;
+        var index           = 0;
+        var compartment     = null;
+        var batteryCnt      = 1;
+        var healthRecIndex  = 0;
+        var healthRecords   = null;
 
         if (true === argv.json) {
 
-            console.log(JSON.stringify(vehiclePos, null, 2));
+            console.log(JSON.stringify(batteryHealth, null, 2));
 
-        } else if (true === argv.kml) {
+        } else if ("undefined" !== typeof argv.filter) {
 
-            console.log(kml.generate({
-                position: {
-                    name: argv.sn,
-                    description: "Last known position from " + timeDate.toLocaleString(),
-                    latitude: vehiclePos.lat,
-                    longitude: vehiclePos.lng
-                }
-            }));
+            console.log(util.filter(batteryHealth, argv.filter));
 
         } else {
 
-            console.log("Latitude     : " + vehiclePos.lat);
-            console.log("Longitude    : " + vehiclePos.lng);
-            console.log("Timestamp    : " + timeDate.toLocaleString());
-            console.log("GPS          : " + vehiclePos.gps);
-            console.log("GPS precision: " + vehiclePos.gpsPrecision);
+            if ("object" === typeof batteryHealth.batteries.compartmentB)
+            {
+                ++batteryCnt;
+            }
 
+            for(index = 0; index < batteryCnt; ++index) {
+                if (0 === index) {
+                    console.log("Battery A        :");
+                    compartment = batteryHealth.batteries.compartmentA;
+                } else {
+                    console.log("Battery B        :");
+                    compartment = batteryHealth.batteries.compartmentB;
+                }
+
+                console.log("\tBMS id         : " + compartment.bmsId);
+                console.log("\tIs connected   : " + compartment.isConnected);
+                console.log("\tGrade          : " + compartment.gradeBattery);
+                console.log("\tHealth records : ");
+
+                healthRecords = compartment.healthRecords;
+                for(healthRecIndex = 0; healthRecIndex < healthRecords.length; ++healthRecIndex) {
+
+                    console.log("\t\tResult      : " + healthRecords[healthRecIndex].result);
+                    console.log("\t\tCharge count: " + healthRecords[healthRecIndex].chargeCount);
+                    console.log("\t\tColor       : " + healthRecords[healthRecIndex].color);
+                    console.log("\t\tTime        : " + new Date(healthRecords[healthRecIndex].time).toLocaleString());
+                    console.log("\t\tName        : " + healthRecords[healthRecIndex].name);
+                }
+            }
+
+            console.log("Is double battery: " + batteryHealth.isDoubleBattery);
         }
 
     }).catch(function(err) {

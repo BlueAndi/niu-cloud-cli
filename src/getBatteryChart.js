@@ -22,9 +22,9 @@
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 
-exports.command = "get-tracks";
+exports.command = "get-battery-chart";
 
-exports.describe = "Get tracks.";
+exports.describe = "Get battery chart.";
 
 exports.builder = {
     token: {
@@ -37,20 +37,30 @@ exports.builder = {
         type: "string",
         demand: true
     },
+    bmsId: {
+        describe: "BMS id",
+        type: "string",
+        demand: true
+    },
+    page: {
+        describe: "Page",
+        type: "string",
+        demand: true
+    },
+    pageSize: {
+        describe: "Page size",
+        type: "string",
+        demand: true
+    },
+    pageLength: {
+        describe: "Page length",
+        type: "string",
+        demand: true
+    },
     json: {
         describe: "Output result in JSON format.",
         type: "boolean",
         default: false
-    },
-    start: {
-        describe: "Track start index (0..N)",
-        type: "number",
-        default: 0
-    },
-    num: {
-        describe: "Number of tracks",
-        type: "number",
-        default: 10
     }
 };
 
@@ -63,47 +73,39 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        return result.client.getTracks({
+        return result.client.getBatteryChart({
             sn: argv.sn,
-            index: argv.start,
-            pageSize: argv.num
+            bmsId: argv.bmsId,
+            page: argv.page,
+            pageSize: argv.pageSize,
+            pageLength: argv.pageLength
         });
 
     }).then(function(result) {
 
-        var tracks      = result.result.data;
-        var track       = null;
-        var index       = 0;
-        var startTime   = null;
-        var endTime     = null;
+        var batteryChart    = result.result.data;
+        var index           = 0;
 
         if (true === argv.json) {
 
-            console.log(JSON.stringify(tracks, null, 2));
+            console.log(JSON.stringify(batteryChart, null, 2));
 
         } else {
 
-            for(index = 0; index < tracks.length; ++index) {
-                track       = tracks[index];
-                startTime   = new Date(track.startTime);
-                endTime     = new Date(track.endTime);
+            console.log("\"mileage [km]\";\"Battery status [%]\"");
 
-                console.log("Track #" + (index + 1));
-                console.log("\tTrack id        : " + track.trackId);
-                console.log("\tTrack date      : " + track.date);
-                console.log("\tTrack start time: " + startTime.toLocaleString());
-                console.log("\tTrack end time  : " + endTime.toLocaleString());
-                console.log("\tDistance        : " + track.distance + " m");
-                console.log("\tAverage speed   : " + track.avespeed + " km/h");
-                console.log("\tRiding time     : " + track.ridingtime + " min.");
-                console.log("\tStart point     : ");
-                console.log("\t\tLatitude : " + track.startPoint.lat);
-                console.log("\t\tLongitude: " + track.startPoint.lng);
-                console.log("\tEnd point       : ");
-                console.log("\t\tLatitude : " + track.lastPoint.lat);
-                console.log("\t\tLongitude: " + track.lastPoint.lng);
+            if ("undefined" !== typeof batteryChart.items2) {
+
+                for(index = 0; index < batteryChart.items2.length; ++index) {
+
+                    console.log(parseInt(batteryChart.items2[index].m) + ";" + parseInt(batteryChart.items2[index].b));
+                }
             }
 
+            for(index = 0; index < batteryChart.items1.length; ++index) {
+
+                console.log(parseInt(batteryChart.items1[index].m) + ";" + parseInt(batteryChart.items1[index].b));
+            }
         }
 
     }).catch(function(err) {
