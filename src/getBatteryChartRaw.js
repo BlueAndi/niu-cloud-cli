@@ -22,9 +22,9 @@
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 
-exports.command = "get-battery-chart";
+exports.command = "get-battery-chart-raw";
 
-exports.describe = "Get battery chart.";
+exports.describe = "Get battery chart by raw parameters.";
 
 exports.builder = {
     token: {
@@ -37,9 +37,24 @@ exports.builder = {
         type: "string",
         demand: true
     },
-    battery: {
-        describe: "Select battery \"A\" or \"B\"",
+    bmsId: {
+        describe: "BMS id",
+        type: "number",
+        demand: true
+    },
+    page: {
+        describe: "Page",
+        type: "number",
+        demand: true
+    },
+    pageSize: {
+        describe: "Page size",
         type: "string",
+        demand: true
+    },
+    pageLength: {
+        describe: "Page length",
+        type: "number",
         demand: true
     },
     json: {
@@ -52,78 +67,44 @@ exports.builder = {
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
 
-    if (("A" !== argv.battery) &&
-        ("B" !== argv.battery)) {
-
-        console.log("Only \"A\" or \"B\" for battery are supported.");
-        return;
-    }
-
     client.setSessionToken({
 
         token: argv.token
 
     }).then(function(result) {
 
-        var bmsId       = ("A" === argv.battery) ? 3 : 2;
-        var page        = 0;
-        var pageSize    = "B";
-        var pageLength  = 1;
-        var data        = [];
-
-        return loop(result.client.getBatteryChart({
+        return result.client.getBatteryChart({
             sn: argv.sn,
-            bmsId: bmsId,
-            page: page,
-            pageSize: pageSize,
-            pageLength: pageLength
-        }), function(par) {
-
-            var nextPar = {
-                done: false,
-                value: null
-            };
-
-            if (0 < par.result.data.items1.length) {
-
-                data.unshift(...par.result.data.items1);
-
-                page += 1;
-
-                nextPar.done = false;
-                nextPar.value = result.client.getBatteryChart({
-                    sn: argv.sn,
-                    bmsId: bmsId,
-                    page: page,
-                    pageSize: pageSize,
-                    pageLength: pageLength
-                });
-
-            } else {
-
-                nextPar.done = true;
-                nextPar.value = data;
-
-            }
-
-            return nextPar;
+            bmsId: argv.bmsId,
+            page: argv.page,
+            pageSize: argv.pageSize,
+            pageLength: argv.pageLength
         });
 
     }).then(function(result) {
 
-        var index = 0;
+        var batteryChart    = result.result.data;
+        var index           = 0;
 
         if (true === argv.json) {
 
-            console.log(JSON.stringify(result, null, 2));
+            console.log(JSON.stringify(batteryChart, null, 2));
 
         } else {
 
             console.log("\"Mileage [km]\";\"Battery status [%]\"");
 
-            for(index = 0; index < result.length; ++index) {
-    
-                console.log(parseInt(result[index].m) + ";" + parseInt(result[index].b));
+            if ("undefined" !== typeof batteryChart.items2) {
+
+                for(index = 0; index < batteryChart.items2.length; ++index) {
+
+                    console.log(parseInt(batteryChart.items2[index].m) + ";" + parseInt(batteryChart.items2[index].b));
+                }
+            }
+
+            for(index = 0; index < batteryChart.items1.length; ++index) {
+
+                console.log(parseInt(batteryChart.items1[index].m) + ";" + parseInt(batteryChart.items1[index].b));
             }
         }
 
@@ -146,17 +127,3 @@ exports.handler = function(argv) {
 
     return;
 };
-
-/**
- * Promise loop.
- * 
- * @param {Promise}     promise - A native promise.
- * @param {Function}    fn      - Result function.
- * 
- * @returns {Promise|Object} Depended on result function, a promise or the result value.
- */
-function loop(promise, fn) {
-    return promise.then(fn).then(function(wrapper) {
-        return (false === wrapper.done) ? loop(wrapper.value, fn) : wrapper.value;
-    });
-}
