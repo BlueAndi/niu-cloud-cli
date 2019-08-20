@@ -42,6 +42,11 @@ exports.builder = {
         type: "string",
         demand: true
     },
+    pages: {
+        describe: "Number of pages to get",
+        type: "number",
+        default: 0
+    },
     json: {
         describe: "Output result in JSON format.",
         type: "boolean",
@@ -65,11 +70,12 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var bmsId       = ("A" === argv.battery) ? 3 : 2;
-        var page        = 0;
+        var bmsId       = ("A" === argv.battery) ? 1 : 2;
+        var page        = 1;
         var pageSize    = "B";
         var pageLength  = 1;
         var data        = [];
+        var pages       = argv.pages;
 
         return loop(result.client.getBatteryChart({
             sn: argv.sn,
@@ -84,9 +90,20 @@ exports.handler = function(argv) {
                 value: null
             };
 
-            if (0 < par.result.data.items1.length) {
+            data.unshift(...par.result.data.items1);
 
-                data.unshift(...par.result.data.items1);
+            if ((0 < argv.pages) &&
+                (0 < pages)) {
+
+                --pages;
+
+            } else {
+
+                pages = 1;
+            }
+
+            if ((0 < pages) &&
+                (0 < par.result.data.items1.length)) {
 
                 page += 1;
 
