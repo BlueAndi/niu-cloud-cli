@@ -39,12 +39,12 @@ exports.builder = {
     },
     bmsId: {
         describe: "BMS id",
-        type: "string",
+        type: "number",
         demand: true
     },
     page: {
         describe: "Page",
-        type: "string",
+        type: "number",
         demand: true
     },
     pageSize: {
@@ -54,7 +54,7 @@ exports.builder = {
     },
     pageLength: {
         describe: "Page length",
-        type: "string",
+        type: "number",
         demand: true
     },
     json: {
