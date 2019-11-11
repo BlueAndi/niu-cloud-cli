@@ -2,6 +2,8 @@
 Access the NIU cloud via command line interface. It is based on the [niu-cloud-connector](https://github.com/BlueAndi/niu-cloud-connector).
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://choosealicense.com/licenses/mit/)
+[![Repo Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Release](https://img.shields.io/github/release/BlueAndi/niu-cloud-cli.svg)](https://github.com/BlueAndi/niu-cloud-cli/releases)
 
 A project originated from an [article in the Elektroroller-Forum](https://www.elektroroller-forum.de/viewtopic.php?f=63&t=6227) [German].
 
