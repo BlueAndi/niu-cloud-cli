@@ -83,7 +83,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var batteryChart    = result.result.data;
+        var batteryChart    = result.result;
         var index           = 0;
 
         if (true === argv.json) {

@@ -72,7 +72,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var firmwareData    = result.result.data;
+        var firmwareData    = result.result;
         var firmwareDate    = new Date(firmwareData.date);
 
         if (true === argv.json) {

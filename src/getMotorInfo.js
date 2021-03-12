@@ -72,7 +72,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var motorInfo       = result.result.data;
+        var motorInfo       = result.result;
         var index           = 0;
         var compartment     = null;
         var batteryCnt      = 1;

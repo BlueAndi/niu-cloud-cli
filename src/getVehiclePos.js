@@ -73,7 +73,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var vehiclePos  = result.result.data;
+        var vehiclePos  = result.result;
         var timeDate    = new Date(vehiclePos.timestamp);
 
         if (true === argv.json) {

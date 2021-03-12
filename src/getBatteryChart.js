@@ -90,7 +90,7 @@ exports.handler = function(argv) {
                 value: null
             };
 
-            data.unshift(...par.result.data.items1);
+            data.unshift(...par.result.items1);
 
             if ((0 < argv.pages) &&
                 (0 < pages)) {
@@ -103,7 +103,7 @@ exports.handler = function(argv) {
             }
 
             if ((0 < pages) &&
-                (0 < par.result.data.items1.length)) {
+                (0 < par.result.items1.length)) {
 
                 page += 1;
 

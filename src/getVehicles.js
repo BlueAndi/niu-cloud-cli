@@ -66,7 +66,7 @@ exports.handler = function(argv) {
     }).then(function(result) {
 
         var vehicleIndex    = 0;
-        var vehicles        = result.result.data;
+        var vehicles        = result.result;
         var vehicle         = null;
 
         if (true === argv.json) {

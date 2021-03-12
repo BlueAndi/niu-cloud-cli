@@ -80,7 +80,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var trackDetail     = result.result.data;
+        var trackDetail     = result.result;
         var trackItems      = trackDetail.trackItems;
         var trackItem       = null;
         var index           = 0;

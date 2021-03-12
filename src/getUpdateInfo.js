@@ -72,7 +72,7 @@ exports.handler = function(argv) {
 
     }).then(function(result) {
 
-        var updateInfo = result.result.data;
+        var updateInfo = result.result;
 
         if (true === argv.json) {
 

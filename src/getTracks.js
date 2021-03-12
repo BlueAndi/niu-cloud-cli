@@ -70,12 +70,15 @@ exports.handler = function(argv) {
         });
 
     }).then(function(result) {
-
-        var tracks      = result.result.data;
+        var tracks      = result.result;
         var track       = null;
         var index       = 0;
         var startTime   = null;
         var endTime     = null;
+
+        if (null === tracks) {
+            tracks = [];
+        }
 
         if (true === argv.json) {
 
