@@ -94,7 +94,7 @@ function getBearing(startLat, startLong, endLat, endLong) {
  * @param {string}  str     - String to indent.
  * @param {number}  indent  - Number of spaces.
  * 
- * @return Indented string.
+ * @returns {string} Indented string.
  */
 function indentStr(str, indent) {
     var index   = 0;
