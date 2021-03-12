@@ -116,6 +116,10 @@ exports.handler = function(argv) {
 
             console.log(JSON.stringify(trackDetail, null, 2));
 
+        } else if (null === trackItems) {
+        
+            /* No output */
+
         } else if (true === argv.kml) {
 
             for(index = 0; index < trackItems.length; ++index) {
