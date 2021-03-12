@@ -41,5 +41,5 @@ yargs.usage("Usage: $0 <command> [options]")
     .help("h")
     .alias("h", "help")
     .showHelpOnFail(false, "Specify --help for available options.")
-    .epilog("Copyright 2019 by Andreas Merkle <web@blue-andi.de>")
+    .epilog("Copyright 2019-2021 by Andreas Merkle <web@blue-andi.de>")
     .argv;

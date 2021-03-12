@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
+const util = require("./util");
 
 exports.command = "create-token <account> <password> <countryCode>";
 
@@ -38,6 +39,11 @@ exports.builder = {
     countryCode: {
         describe: "Your country code, e.g. 49 for germany.",
         string: true
+    },
+    tokenFile: {
+        describe: "A filename where the token will be stored. If the file exists, it will be overwritten.",
+        type: "string",
+        default: ""
     }
 };
 
@@ -51,12 +57,44 @@ exports.handler = function(argv) {
         countryCode: argv.countryCode
 
     }).then(function(result) {
+        var jsonToken = null;
+        var promise = null;
 
-        console.log(result.result);
+        if ("" === argv.tokenFile) {
+            promise = Promise.resolve(result.result);
+        } else {
+
+            jsonToken = {
+                token: result.result
+            };
+
+            promise = util.saveFile(argv.tokenFile, JSON.stringify(jsonToken, null, 2)).then(function() {
+                return Promise.resolve("Complete.");
+            }).catch(function() {
+                return Promise.reject("Failed to store token.");
+            });
+        }
+
+        return promise;
+
+    }).then(function(rsp) {
+
+        console.log(rsp);
 
     }).catch(function(err) {
 
-        console.log("Error: ", err.error.message);
+        if ("string" === typeof err) {
+            console.log("Error: " + err);
+        } else if ("object" === typeof err) {
+
+            if ("object" === typeof err.error) {
+                console.log("Error: ", err.error.message);
+            } else {
+                console.log("Internal error.");
+            }
+        } else {
+            console.log("Internal error.");
+        }
 
     });
 

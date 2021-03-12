@@ -10,10 +10,11 @@ A project originated from an [article in the Elektroroller-Forum](https://www.el
 1. [Installation](https://github.com/BlueAndi/niu-cloud-cli#installation)
 2. [Show all commands and parameters](https://github.com/BlueAndi/niu-cloud-cli#show-all-commands-and-parameters)
 3. [Example](https://github.com/BlueAndi/niu-cloud-cli#example)
-4. [KML output for google earth or google maps](https://github.com/BlueAndi/niu-cloud-cli#kml-output-for-google-earth-or-google-maps)
-5. [Filter output](https://github.com/BlueAndi/niu-cloud-cli#filter-output)
-6. [Issues, Ideas and bugs](https://github.com/BlueAndi/niu-cloud-cli#issues-ideas-and-bugs)
-7. [License](https://github.com/BlueAndi/niu-cloud-cli#license)
+4. [Token](https://github.com/BlueAndi/niu-cloud-cli#token)
+5. [KML output for google earth or google maps](https://github.com/BlueAndi/niu-cloud-cli#kml-output-for-google-earth-or-google-maps)
+6. [Filter output](https://github.com/BlueAndi/niu-cloud-cli#filter-output)
+7. [Issues, Ideas and bugs](https://github.com/BlueAndi/niu-cloud-cli#issues-ideas-and-bugs)
+8. [License](https://github.com/BlueAndi/niu-cloud-cli#license)
 
 ## Installation
 
@@ -34,6 +35,7 @@ $ node niu-cloud-cli.js --help
 ## Example
 
 First create a session token with your NIU cloud account. This token is necessary for all further requests.
+You need your user account/password and additional your contry code, like e.g. 49 for germany.
 
 ```
 $ node niu-cloud-cli.js create-token <account> <password> <country-code>
@@ -44,6 +46,17 @@ Get a list of your vehicles. Each vehicle has a serial number, which is necessar
 ```
 $ node niu-cloud-cli.js get-vehicles --token <token>
 ```
+
+## Token
+
+Note, a token can be stored in a file in JSON format:
+```json
+{
+    "token": "..."
+}
+```
+
+Use the option ```--tokenFile <filename>``` to save (create-token command) and load (all other commands) the token.
 
 ## KML output for google earth or google maps
 

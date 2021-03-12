@@ -31,7 +31,7 @@ exports.builder = {
     token: {
         describe: "Token",
         type: "string",
-        demand: true
+        conflicts: "tokenFile"
     },
     json: {
         describe: "Output result in JSON format.",
@@ -41,11 +41,16 @@ exports.builder = {
     filter: {
         describe: "Output filter",
         type: "string"
+    },
+    tokenFile: {
+        describe: "Load token from the file with the given filename",
+        type: "string"
     }
 };
 
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
+    var promise = null;
 
     /* Only --json or --filter is possible. */
     if ((true === argv.json) &&
@@ -54,10 +59,25 @@ exports.handler = function(argv) {
         console.log("Only --json or --filter is possible.");
         return;
     }
-    
-    client.setSessionToken({
 
-        token: argv.token
+    if (("string" === typeof argv.token) &&
+        (0 < argv.token.length)) {
+        promise = Promise.resolve({
+            token: argv.token
+        });
+    } else if ("string" === typeof argv.tokenFile) {
+        promise = util.loadFile(argv.tokenFile).then(function(rsp) {
+            return Promise.resolve(JSON.parse(rsp));
+        });
+    } else {
+        promise = Promise.reject("No token available.");
+    }
+
+    promise.then(function(result) {
+
+        return client.setSessionToken({
+            token: result.token
+        });
 
     }).then(function(result) {
 

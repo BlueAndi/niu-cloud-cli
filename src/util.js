@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+var fs = require("fs");
 
 /**
  * Utility functionality
@@ -74,4 +75,59 @@ util.filter = function(obj, filter) {
     }
 
     return result;
+};
+
+/**
+ * Save data to a file with the given filename.
+ * 
+ * @param {string}  filename    - Name of the file.
+ * @param {string}  data        - Data which to store.
+ * 
+ * @returns {Promise} Nothing.
+ */
+util.saveFile = function(filename, data) {
+
+    return new Promise(function(resolve, reject) {
+
+        fs.writeFile(
+            filename,
+            data,
+            "utf8",
+            function(err) {
+                if (err) {
+                    reject();
+                } else {
+                    resolve();
+                }
+            }
+        );    
+
+    });
+};
+
+/**
+ * Load data from a file with the given filename.
+ * 
+ * @param {string}  filename    - Name of the file.
+ * 
+ * @returns {Promise} Loaded data as string.
+ */
+util.loadFile = function(filename) {
+
+    return new Promise(function(resolve, reject) {
+
+        fs.readFile(
+            filename,
+            "utf-8",
+            function(err, data) {
+
+                if (err) {
+                    reject();
+                } else {
+                    resolve(data);
+                }
+            }
+        );
+
+    });
 };

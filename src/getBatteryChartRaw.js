@@ -21,6 +21,7 @@
  * SOFTWARE.
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
+const util = require("./util");
 
 exports.command = "get-battery-chart-raw";
 
@@ -30,7 +31,7 @@ exports.builder = {
     token: {
         describe: "Token",
         type: "string",
-        demand: true
+        conflicts: "tokenFile"
     },
     sn: {
         describe: "Serial number",
@@ -61,15 +62,35 @@ exports.builder = {
         describe: "Output result in JSON format.",
         type: "boolean",
         default: false
+    },
+    tokenFile: {
+        describe: "Load token from the file with the given filename",
+        type: "string"
     }
 };
 
 exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
+    var promise = null;
 
-    client.setSessionToken({
+    if (("string" === typeof argv.token) &&
+        (0 < argv.token.length)) {
+        promise = Promise.resolve({
+            token: argv.token
+        });
+    } else if ("string" === typeof argv.tokenFile) {
+        promise = util.loadFile(argv.tokenFile).then(function(rsp) {
+            return Promise.resolve(JSON.parse(rsp));
+        });
+    } else {
+        promise = Promise.reject("No token available.");
+    }
 
-        token: argv.token
+    promise.then(function(result) {
+
+        return client.setSessionToken({
+            token: result.token
+        });
 
     }).then(function(result) {
 
