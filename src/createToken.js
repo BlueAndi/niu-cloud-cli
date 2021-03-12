@@ -28,12 +28,15 @@ exports.describe = "Create a session token.";
 
 exports.builder = {
     account: {
+        describe: "Your user name or email address.",
         string: true
     },
     password: {
+        describe: "Your user password.",
         string: true
     },
     countryCode: {
+        describe: "Your country code, e.g. 49 for germany.",
         string: true
     }
 };
