@@ -91,7 +91,7 @@ exports.handler = function(argv) {
         });
 
     }).then(function(result) {
-        var tracks      = result.result;
+        var tracks      = result.result.items;
         var track       = null;
         var index       = 0;
         var startTime   = null;
