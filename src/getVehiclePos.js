@@ -52,6 +52,11 @@ exports.builder = {
     tokenFile: {
         describe: "Load token from the file with the given filename",
         type: "string"
+    },
+    debug: {
+        describe: "Use it for debugging purposes.",
+        type: "boolean",
+        default: false
     }
 };
 
@@ -59,6 +64,10 @@ exports.handler = function(argv) {
     var client = new niuCloudConnector.Client();
     var promise = null;
 
+    if (true === argv.debug) {
+        client.enableDebugMode(true);
+    }
+    
     /* Only --json or --kml is possible. */
     if ((true === argv.json) &&
         (true === argv.kml))
