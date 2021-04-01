@@ -22,6 +22,7 @@
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 const util = require("./util");
+const errorCode = require("./errorCode");
 const kml = require("./kml");
 
 exports.command = "get-vehicle-pos";
@@ -146,6 +147,7 @@ exports.handler = function(argv) {
             console.log("Error: ", err.error.trace);
         }
 
+        yargs.exit(errorCode.FAILED);
     });
 
     return;

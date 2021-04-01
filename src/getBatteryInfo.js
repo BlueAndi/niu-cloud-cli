@@ -22,6 +22,7 @@
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 const util = require("./util");
+const errorCode = require("./errorCode");
 
 exports.command = "get-battery-info";
 
@@ -156,6 +157,7 @@ exports.handler = function(argv) {
             console.log("Error: ", err.error.trace);
         }
 
+        yargs.exit(errorCode.FAILED);
     });
 
     return;

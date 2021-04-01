@@ -20,8 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const yargs = require("yargs");
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 const util = require("./util");
+const errorCode = require("./errorCode");
 
 exports.command = "get-vehicles";
 
@@ -143,6 +145,7 @@ exports.handler = function(argv) {
             console.log("Error: ", err.error.trace);
         }
 
+        yargs.exit(errorCode.FAILED);
     });
 
     return;

@@ -22,6 +22,7 @@
  */
 const niuCloudConnector = require("../libs/niu-cloud-connector");
 const util = require("./util");
+const errorCode = require("./errorCode");
 
 exports.command = "create-token <account> <password> <countryCode>";
 
@@ -96,6 +97,7 @@ exports.handler = function(argv) {
             console.log("Internal error.");
         }
 
+        yargs.exit(errorCode.FAILED);
     });
 
     return;
