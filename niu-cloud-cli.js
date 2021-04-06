@@ -40,6 +40,6 @@ yargs.usage("Usage: $0 <command> [options]")
     .demandCommand()
     .help("h")
     .alias("h", "help")
-    .showHelpOnFail(false, "Specify --help for available options.")
+    .showHelpOnFail(true)
     .epilog("Copyright 2019-2021 by Andreas Merkle <web@blue-andi.de>")
     .argv;
