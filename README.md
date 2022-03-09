@@ -125,7 +125,7 @@ This will output only the estimatedMileage value! Add more filters and the outpu
 
 ## Issues, Ideas and bugs
 
-If you have further ideas or you found some bugs, great! Create a [issue](https://github.com/BlueAndi/niu-cloud-connector/issues) or if
+If you have further ideas or you found some bugs, great! Create a [issue](https://github.com/BlueAndi/niu-cloud-cli/issues) or if
 you are able and willing to fix it by yourself, clone the repository and create a pull request.
 
 ## License
