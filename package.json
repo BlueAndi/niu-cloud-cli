@@ -9,7 +9,7 @@
   "author": "Andreas Merkle <web@blue-andi.de>",
   "license": "MIT",
   "dependencies": {
-    "got": "^11.6.2",
+    "got": "^11.8.5",
     "yargs": "^16.0.3"
   }
 }
