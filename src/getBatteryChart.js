@@ -20,9 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const niuCloudConnector = require("../libs/niu-cloud-connector");
-const util = require("./util");
-const errorCode = require("./errorCode");
+import niuCloudConnector from "../libs/niu-cloud-connector"
+import util from "../util.js"
+import errorCode from "../errorCode.js"
 
 exports.command = "get-battery-chart";
 

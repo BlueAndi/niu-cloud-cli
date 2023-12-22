@@ -25,9 +25,7 @@
  * Error codes
  * @namespace
  */
-var errorCode = {
+export const errorCode = {
     SUCCESS: 0,
     FAILED: 1
 };
-
-module.exports = errorCode;

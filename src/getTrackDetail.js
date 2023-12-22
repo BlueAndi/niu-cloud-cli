@@ -20,10 +20,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const niuCloudConnector = require("../libs/niu-cloud-connector");
-const util = require("./util");
-const errorCode = require("./errorCode");
-const kml = require("./kml");
+import niuCloudConnector from "../libs/niu-cloud-connector"
+import util from "../util.js"
+import errorCode from "../errorCode.js"
+import kml from "./kml.js";
 
 exports.command = "get-track-detail";
 
