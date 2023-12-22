@@ -23,6 +23,7 @@
 
 /** Command line argument handling */
 import yargs from "yargs";
+import { hideBin } from "yargs/helpers"
 import createToken from "./src/createToken.js"
 import getVehicles from "./src/getVehicles.js"
 import getVehiclePos from "./src/getVehiclePos.js"
@@ -36,7 +37,7 @@ import getFirmwareVersion from "./src/getFirmwareVersion.js"
 import getUpdateInfo from "./src/getUpdateInfo.js"
 import getMotorInfo from "./src/getMotorInfo.js"
 
-yargs().usage("Usage: $0 <command> [options]")
+yargs(hideBin(process.argv)).usage("Usage: $0 <command> [options]")
     .command(createToken)
     .command(getVehicles)
     .command(getVehiclePos)
