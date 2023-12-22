@@ -36,7 +36,7 @@ import getFirmwareVersion from "./src/getFirmwareVersion.js"
 import getUpdateInfo from "./src/getUpdateInfo.js"
 import getMotorInfo from "./src/getMotorInfo.js"
 
-yargs.usage("Usage: $0 <command> [options]")
+yargs().usage("Usage: $0 <command> [options]")
     .command(createToken)
     .command(getVehicles)
     .command(getVehiclePos)
