@@ -21,14 +21,14 @@
  * SOFTWARE.
  */
 import niuCloudConnector from "../libs/niu-cloud-connector"
-import util from "../util.js"
-import errorCode from "../errorCode.js"
+import util from "../src/util.js"
+import errorCode from "../src/errorCode.js"
 
-exports.command = "get-battery-chart-raw";
+const command = "get-battery-chart-raw";
 
-exports.describe = "Get battery chart by raw parameters.";
+const describe = "Get battery chart by raw parameters.";
 
-exports.builder = {
+const builder = {
     token: {
         describe: "Token",
         type: "string",
@@ -75,7 +75,7 @@ exports.builder = {
     }
 };
 
-exports.handler = function(argv) {
+const handler = function(argv) {
     var client = new niuCloudConnector.Client();
     var promise = null;
 
@@ -158,4 +158,11 @@ exports.handler = function(argv) {
     });
 
     return;
+};
+
+export default {
+    command,
+    describe,
+    builder,
+    handler
 };

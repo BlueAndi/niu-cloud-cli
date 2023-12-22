@@ -25,7 +25,9 @@
  * Error codes
  * @namespace
  */
-export const errorCode = {
+const errorCode = {
     SUCCESS: 0,
     FAILED: 1
 };
+
+export default errorCode;

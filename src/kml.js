@@ -25,7 +25,9 @@
  * KML functionality
  * @namespace
  */
-export const kml = {};
+const kml = {};
+
+export default kml;
 
 /**
  * Convert a value in degree to radian.

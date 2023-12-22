@@ -26,7 +26,9 @@ import fs from "fs";
  * Utility functionality
  * @namespace
  */
-export const util = {};
+const util = {};
+
+export default util;
 
 /**
  * Resolve an object path and return value.
