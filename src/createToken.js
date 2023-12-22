@@ -97,7 +97,7 @@ const handler = function(argv) {
             console.log("Internal error.");
         }
 
-        yargs.exit(errorCode.FAILED);
+        yargs().exit(errorCode.FAILED);
     });
 
     return;

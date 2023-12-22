@@ -190,7 +190,7 @@ const handler = function(argv) {
             console.log("Error: ", err.error.trace);
         }
 
-        yargs.exit(errorCode.FAILED);
+        yargs().exit(errorCode.FAILED);
     });
 
     return;
