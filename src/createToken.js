@@ -20,15 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import niuCloudConnector from "../libs/niu-cloud-connector"
-import util from "../util.js"
-import errorCode from "../errorCode.js"
+import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
+import util from "../src/util.js"
+import errorCode from "../src/errorCode.js"
 
-exports.command = "create-token <account> <password> <countryCode>";
+const command = "create-token <account> <password> <countryCode>";
 
-exports.describe = "Create a session token.";
+const describe = "Create a session token.";
 
-exports.builder = {
+const builder = {
     account: {
         describe: "Your user name or email address.",
         string: true
@@ -48,7 +48,7 @@ exports.builder = {
     }
 };
 
-exports.handler = function(argv) {
+const handler = function(argv) {
     var client = new niuCloudConnector.Client();
 
     client.createSessionToken({
@@ -101,4 +101,11 @@ exports.handler = function(argv) {
     });
 
     return;
+};
+
+export default {
+    command,
+    describe,
+    builder,
+    handler
 };

@@ -20,16 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import niuCloudConnector from "../libs/niu-cloud-connector"
-import util from "../util.js"
-import errorCode from "../errorCode.js"
-import kml from "./kml.js";
+import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
+import util from "../src/util.js"
+import errorCode from "../src/errorCode.js"
+import kml from "../src/kml.js";
 
-exports.command = "get-vehicle-pos";
+const command = "get-vehicle-pos";
 
-exports.describe = "Get vehicle position.";
+const describe = "Get vehicle position.";
 
-exports.builder = {
+const builder = {
     token: {
         describe: "Token",
         type: "string",
@@ -61,7 +61,7 @@ exports.builder = {
     }
 };
 
-exports.handler = function(argv) {
+const handler = function(argv) {
     var client = new niuCloudConnector.Client();
     var promise = null;
 
@@ -151,4 +151,11 @@ exports.handler = function(argv) {
     });
 
     return;
+};
+
+export default {
+    command,
+    describe,
+    builder,
+    handler
 };

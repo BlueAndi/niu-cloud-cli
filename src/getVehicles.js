@@ -21,15 +21,15 @@
  * SOFTWARE.
  */
 import yargs from "yargs";
-import niuCloudConnector from "../libs/niu-cloud-connector"
-import util from "../util.js"
-import errorCode from "../errorCode.js"
+import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
+import util from "../src/util.js"
+import errorCode from "../src/errorCode.js"
 
-exports.command = "get-vehicles";
+const command = "get-vehicles";
 
-exports.describe = "Get vehicles.";
+const describe = "Get vehicles.";
 
-exports.builder = {
+const builder = {
     token: {
         describe: "Token",
         type: "string",
@@ -55,7 +55,7 @@ exports.builder = {
     }
 };
 
-exports.handler = function(argv) {
+const handler = function(argv) {
     var client = new niuCloudConnector.Client();
     var promise = null;
 
@@ -149,4 +149,11 @@ exports.handler = function(argv) {
     });
 
     return;
+};
+
+export default {
+    command,
+    describe,
+    builder,
+    handler
 };

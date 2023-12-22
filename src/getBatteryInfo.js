@@ -20,15 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import niuCloudConnector from "../libs/niu-cloud-connector"
-import util from "../util.js"
-import errorCode from "../errorCode.js"
+import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
+import util from "../src/util.js"
+import errorCode from "../src/errorCode.js"
 
-exports.command = "get-battery-info";
+const command = "get-battery-info";
 
-exports.describe = "Get battery information.";
+const describe = "Get battery information.";
 
-exports.builder = {
+const builder = {
     token: {
         describe: "Token",
         type: "string",
@@ -59,7 +59,7 @@ exports.builder = {
     }
 };
 
-exports.handler = function(argv) {
+const handler = function(argv) {
     var client = new niuCloudConnector.Client();
     var promise = null;
 
@@ -161,4 +161,11 @@ exports.handler = function(argv) {
     });
 
     return;
+};
+
+export default {
+    command,
+    describe,
+    builder,
+    handler
 };
