@@ -20,15 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-var fs = require("fs");
+import fs from "fs";
 
 /**
  * Utility functionality
  * @namespace
  */
-var util = {};
-
-module.exports = util;
+export const util = {};
 
 /**
  * Resolve an object path and return value.

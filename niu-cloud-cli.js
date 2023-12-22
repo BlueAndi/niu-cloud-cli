@@ -22,7 +22,7 @@
  */
 
 /** Command line argument handling */
-const yargs = require("yargs");
+import yargs from "yargs";
 
 yargs.usage("Usage: $0 <command> [options]")
     .command(require("./src/createToken"))
