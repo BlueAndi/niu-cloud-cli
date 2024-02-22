@@ -20,6 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import yargs from "yargs";
 import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
 import util from "../src/util.js"
 import errorCode from "../src/errorCode.js"
