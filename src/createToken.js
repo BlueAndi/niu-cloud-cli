@@ -25,7 +25,7 @@ import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
 import util from "../src/util.js"
 import errorCode from "../src/errorCode.js"
 
-const command = "create-token <account> <password> <countryCode>";
+const command = "create-token <account> <password>";
 
 const describe = "Create a session token.";
 
@@ -36,10 +36,6 @@ const builder = {
     },
     password: {
         describe: "Your user password.",
-        string: true
-    },
-    countryCode: {
-        describe: "Your country code, e.g. 49 for germany.",
         string: true
     },
     tokenFile: {
@@ -55,8 +51,7 @@ const handler = function(argv) {
     client.createSessionToken({
 
         account: argv.account,
-        password: argv.password,
-        countryCode: argv.countryCode
+        password: argv.password
 
     }).then(function(result) {
         var jsonToken = null;
