@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "got": "^13.0.0",
+    "md5": "^2.3.0",
     "yargs": "^17.7.2"
   }
 }
