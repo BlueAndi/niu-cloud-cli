@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2019 - 2023 Andreas Merkle <web@blue-andi.de>
+ * Copyright (c) 2019 - 2024 Andreas Merkle <web@blue-andi.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const niuCloudConnector = require("../libs/niu-cloud-connector");
-const util = require("./util");
-const errorCode = require("./errorCode");
+import yargs from "yargs";
+import niuCloudConnector from "../libs/niu-cloud-connector/index.js"
+import util from "../src/util.js"
+import errorCode from "../src/errorCode.js"
 
-exports.command = "create-token <account> <password> <countryCode>";
+const command = "create-token <account> <password>";
 
-exports.describe = "Create a session token.";
+const describe = "Create a session token.";
 
-exports.builder = {
+const builder = {
     account: {
         describe: "Your user name or email address.",
         string: true
     },
     password: {
         describe: "Your user password.",
-        string: true
-    },
-    countryCode: {
-        describe: "Your country code, e.g. 49 for germany.",
         string: true
     },
     tokenFile: {
@@ -48,14 +45,13 @@ exports.builder = {
     }
 };
 
-exports.handler = function(argv) {
+const handler = function(argv) {
     var client = new niuCloudConnector.Client();
 
     client.createSessionToken({
 
         account: argv.account,
-        password: argv.password,
-        countryCode: argv.countryCode
+        password: argv.password
 
     }).then(function(result) {
         var jsonToken = null;
@@ -97,8 +93,15 @@ exports.handler = function(argv) {
             console.log("Internal error.");
         }
 
-        yargs.exit(errorCode.FAILED);
+        yargs().exit(errorCode.FAILED);
     });
 
     return;
+};
+
+export default {
+    command,
+    describe,
+    builder,
+    handler
 };

@@ -1,6 +1,6 @@
 /* MIT License
  *
- * Copyright (c) 2019 - 2023 Andreas Merkle <web@blue-andi.de>
+ * Copyright (c) 2019 - 2024 Andreas Merkle <web@blue-andi.de>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,37 @@
  */
 
 /** Command line argument handling */
-const yargs = require("yargs");
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers"
+import createToken from "./src/createToken.js"
+import getVehicles from "./src/getVehicles.js"
+import getVehiclePos from "./src/getVehiclePos.js"
+import getBatteryInfo from "./src/getBatteryInfo.js"
+import getBatteryHealth from "./src/getBatteryHealth.js"
+import getBatteryChart from "./src/getBatteryChart.js"
+import getBatteryChartRaw from "./src/getBatteryChartRaw.js"
+import getTracks from "./src/getTracks.js"
+import getTrackDetail from "./src/getTrackDetail.js"
+import getFirmwareVersion from "./src/getFirmwareVersion.js"
+import getUpdateInfo from "./src/getUpdateInfo.js"
+import getMotorInfo from "./src/getMotorInfo.js"
 
-yargs.usage("Usage: $0 <command> [options]")
-    .command(require("./src/createToken"))
-    .command(require("./src/getVehicles"))
-    .command(require("./src/getVehiclePos"))
-    .command(require("./src/getBatteryInfo"))
-    .command(require("./src/getBatteryHealth"))
-    .command(require("./src/getBatteryChart"))
-    .command(require("./src/getBatteryChartRaw"))
-    .command(require("./src/getTracks"))
-    .command(require("./src/getTrackDetail"))
-    .command(require("./src/getFirmwareVersion"))
-    .command(require("./src/getUpdateInfo"))
-    .command(require("./src/getMotorInfo"))
+yargs(hideBin(process.argv)).usage("Usage: $0 <command> [options]")
+    .command(createToken)
+    .command(getVehicles)
+    .command(getVehiclePos)
+    .command(getBatteryInfo)
+    .command(getBatteryHealth)
+    .command(getBatteryChart)
+    .command(getBatteryChartRaw)
+    .command(getTracks)
+    .command(getTrackDetail)
+    .command(getFirmwareVersion)
+    .command(getUpdateInfo)
+    .command(getMotorInfo)
     .demandCommand()
     .help("h")
     .alias("h", "help")
     .showHelpOnFail(true)
-    .epilog("Copyright 2019 - 2023 Andreas Merkle <web@blue-andi.de>")
+    .epilog("Copyright 2019 - 2024 Andreas Merkle <web@blue-andi.de>")
     .argv;
