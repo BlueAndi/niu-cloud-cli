@@ -1,4 +1,5 @@
 # niu-cloud-cli
+
 Access the NIU cloud via command line interface. It is based on the [niu-cloud-connector](https://github.com/BlueAndi/niu-cloud-connector).
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://choosealicense.com/licenses/mit/)
@@ -20,16 +21,16 @@ A project originated from an [article in the Elektroroller-Forum](https://www.el
 
 The niu-cloud-connector libray is included as git submodule. Therefore the "--recursive" option is important, because otherwise the niu-cloud-connector is not included.
 
-```
-$ git clone --recursive https://github.com/BlueAndi/niu-cloud-cli.git
-$ cd niu-cloud-cli
-$ npm install
+```bash
+git clone --recursive https://github.com/BlueAndi/niu-cloud-cli.git
+cd niu-cloud-cli
+npm install
 ```
 
 ## Show all commands and parameters
 
-```
-$ node niu-cloud-cli.js --help
+```bash
+node niu-cloud-cli.js --help
 ```
 
 ## Example
@@ -37,19 +38,20 @@ $ node niu-cloud-cli.js --help
 First create a session token with your NIU cloud account. This token is necessary for all further requests.
 You need your user account/password and additional your contry code, like e.g. 49 for germany.
 
-```
-$ node niu-cloud-cli.js create-token <account> <password> <country-code>
+```bash
+node niu-cloud-cli.js create-token <account> <password> <country-code>
 ```
 
 Get a list of your vehicles. Each vehicle has a serial number, which is necessary to get vehicle specific informations.
 
-```
-$ node niu-cloud-cli.js get-vehicles --token <token>
+```bash
+node niu-cloud-cli.js get-vehicles --token <token>
 ```
 
 ## Token
 
 Note, a token can be stored in a file in JSON format:
+
 ```json
 {
     "token": "..."
@@ -64,8 +66,8 @@ Use the option ```--tokenFile <filename>``` to save (create-token command) and l
 
 Generate a KML file including the last known position of your NIU e-scooter with the following call:
 
-```
-$ node niu-cloud-cli.js get-vehicle-pos --token <token> --sn <serial-number> --kml > pos.kml
+```bash
+node niu-cloud-cli.js get-vehicle-pos --token <token> --sn <serial-number> --kml > pos.kml
 ```
 
 Load the generated pos.kml file in google earth or google map.
@@ -74,10 +76,11 @@ Load the generated pos.kml file in google earth or google map.
 
 First get e.g. the last recorded track.
 
+```bash
+node niu-cloud-cli.js get-tracks --token <token> --sn <serial-number> --num 1
 ```
-$ node niu-cloud-cli.js get-tracks --token <token> --sn <serial-number> --num 1
-```
-```
+
+```plain
 Track #1
         Track id        : 1558023845684dBO79fv:1
         Track date      : 20190516
@@ -97,7 +100,7 @@ Track #1
 There you will find the track id and the track date, which are necessay to retrieve the full detail.
 Now generate a KML file from a complete recorded track of your NIU e-scooter with the following call:
 
-```
+```bash
 node niu-cloud-cli.js get-track-detail --token <token> --sn <serial-number> --trackId <track-id> --trackDate <track-date> --kml > track.kml
 ```
 
@@ -111,13 +114,13 @@ For further processing of data on the command line or via CSV, you can filter da
 
 First check what kind of data is available by takeing a look to the documentation or just output all data in JSON format.
 
-```
+```bash
 node niu-cloud-cli.js get-battery-info --token <token> --sn <serial-number> --json
 ```
 
 Next step is to filter for some data, e.g. the estimatedMileage.
 
-```
+```bash
 node niu-cloud-cli.js get-battery-info --token <token> --sn <serial-number> --filter estimatedMileage
 ```
 
@@ -129,4 +132,5 @@ If you have further ideas or you found some bugs, great! Create a [issue](https:
 you are able and willing to fix it by yourself, clone the repository and create a pull request.
 
 ## License
+
 The whole source code is published under the [MIT license](http://choosealicense.com/licenses/mit/).
